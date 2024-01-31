@@ -9,8 +9,6 @@ import SwiftUI
 
 @main
 struct HealthHomiesApp: App {
-    
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
