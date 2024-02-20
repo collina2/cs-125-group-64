@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-//import FirebaseAnalyticsSwift
-//import FirebaseAnalytics
+import FirebaseAnalyticsSwift
+import FirebaseAnalytics
 
 struct ContentView: View {
     var body: some View {
@@ -18,7 +18,7 @@ struct ContentView: View {
             Text("Hello, world!")
         }
         .padding()
-//        .analyticsScreen(name: "\(ContentView.self)")
+        .analyticsScreen(name: "\(ContentView.self)")
     }
 }
 
