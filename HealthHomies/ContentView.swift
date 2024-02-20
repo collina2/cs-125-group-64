@@ -2,10 +2,12 @@
 //  ContentView.swift
 //  HealthHomies
 //
-//  Created by Andrew Collins on 1/30/24.
+//  Created by Rithvij Pochampally on 2/19/24.
 //
 
 import SwiftUI
+//import FirebaseAnalyticsSwift
+//import FirebaseAnalytics
 
 struct ContentView: View {
     var body: some View {
@@ -16,6 +18,7 @@ struct ContentView: View {
             Text("Hello, world!")
         }
         .padding()
+//        .analyticsScreen(name: "\(ContentView.self)")
     }
 }
 
