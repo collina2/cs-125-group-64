@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49C015EF2B84774800029BC0 /* HealthHomieTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015EE2B84774800029BC0 /* HealthHomieTabView.swift */; };
+		49C015F12B84779F00029BC0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015F02B84779F00029BC0 /* HomeView.swift */; };
+		49C015F32B84781500029BC0 /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015F22B84781500029BC0 /* ActivityCard.swift */; };
 		787A4DEA2B8428EE0018D58F /* HealthHomiesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */; };
 		787A4DEC2B8428EE0018D58F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A4DEB2B8428EE0018D58F /* ContentView.swift */; };
 		787A4DEE2B8428EF0018D58F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787A4DED2B8428EF0018D58F /* Assets.xcassets */; };
@@ -39,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		49C015EE2B84774800029BC0 /* HealthHomieTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthHomieTabView.swift; sourceTree = "<group>"; };
+		49C015F02B84779F00029BC0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		49C015F22B84781500029BC0 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		787A4DE62B8428EE0018D58F /* HealthHomies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthHomies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthHomiesApp.swift; sourceTree = "<group>"; };
 		787A4DEB2B8428EE0018D58F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +116,9 @@
 				787A4DED2B8428EF0018D58F /* Assets.xcassets */,
 				787A4E2B2B8434070018D58F /* GoogleService-Info.plist */,
 				787A4DEF2B8428EF0018D58F /* Preview Content */,
+				49C015EE2B84774800029BC0 /* HealthHomieTabView.swift */,
+				49C015F02B84779F00029BC0 /* HomeView.swift */,
+				49C015F22B84781500029BC0 /* ActivityCard.swift */,
 			);
 			path = HealthHomies;
 			sourceTree = "<group>";
@@ -287,7 +296,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				787A4DEC2B8428EE0018D58F /* ContentView.swift in Sources */,
+				49C015F12B84779F00029BC0 /* HomeView.swift in Sources */,
 				787A4DEA2B8428EE0018D58F /* HealthHomiesApp.swift in Sources */,
+				49C015EF2B84774800029BC0 /* HealthHomieTabView.swift in Sources */,
+				49C015F32B84781500029BC0 /* ActivityCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
