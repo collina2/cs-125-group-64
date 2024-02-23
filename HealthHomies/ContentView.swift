@@ -18,7 +18,8 @@ struct ContentView: View {
             Text("Health Homies")
         }
         .padding()
-        .analyticsScreen(name: "\(ContentView.self)")
+        .analyticsScreen(name: "\(ContentView.self)", extraParameters: ["test2": "test2 value"])
+
     }
 }
 

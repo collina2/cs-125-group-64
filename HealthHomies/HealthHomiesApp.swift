@@ -21,9 +21,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct HealthHomiesApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var manager = HealthManager()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HealthHomieTabView()
+                .environmentObject(manager)
         }
     }
 }
