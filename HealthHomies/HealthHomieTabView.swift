@@ -19,6 +19,12 @@ struct HealthHomieTabView: View {
                 }
                 .environmentObject(manager)
             
+            LogView()
+                .tag("Log")
+                .tabItem {
+                    Image(systemName: "plus.circle.fill")
+                }
+            
             ContentView()
                 .tag("Content")
                 .tabItem {

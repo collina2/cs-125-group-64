@@ -11,6 +11,8 @@
 		49C015F12B84779F00029BC0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015F02B84779F00029BC0 /* HomeView.swift */; };
 		49C015F32B84781500029BC0 /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015F22B84781500029BC0 /* ActivityCard.swift */; };
 		49C015F52B88581F00029BC0 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015F42B88581F00029BC0 /* HealthManager.swift */; };
+		49C015FA2B886C3D00029BC0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49C015F92B886C3D00029BC0 /* LaunchScreen.storyboard */; };
+		49C015FC2B887A0800029BC0 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015FB2B887A0800029BC0 /* LogView.swift */; };
 		787A4DEA2B8428EE0018D58F /* HealthHomiesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */; };
 		787A4DEC2B8428EE0018D58F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A4DEB2B8428EE0018D58F /* ContentView.swift */; };
 		787A4DEE2B8428EF0018D58F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787A4DED2B8428EF0018D58F /* Assets.xcassets */; };
@@ -48,6 +50,8 @@
 		49C015F22B84781500029BC0 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		49C015F42B88581F00029BC0 /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthManager.swift; sourceTree = "<group>"; };
 		49C015F62B885D3500029BC0 /* HealthHomies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthHomies.entitlements; sourceTree = "<group>"; };
+		49C015F92B886C3D00029BC0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		49C015FB2B887A0800029BC0 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		787A4DE62B8428EE0018D58F /* HealthHomies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthHomies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthHomiesApp.swift; sourceTree = "<group>"; };
 		787A4DEB2B8428EE0018D58F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 				49C015F62B885D3500029BC0 /* HealthHomies.entitlements */,
 				787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */,
 				787A4DEB2B8428EE0018D58F /* ContentView.swift */,
+				49C015FB2B887A0800029BC0 /* LogView.swift */,
 				787A4DED2B8428EF0018D58F /* Assets.xcassets */,
 				787A4E2B2B8434070018D58F /* GoogleService-Info.plist */,
 				787A4DEF2B8428EF0018D58F /* Preview Content */,
@@ -124,6 +129,7 @@
 				49C015F02B84779F00029BC0 /* HomeView.swift */,
 				49C015F22B84781500029BC0 /* ActivityCard.swift */,
 				49C015F42B88581F00029BC0 /* HealthManager.swift */,
+				49C015F92B886C3D00029BC0 /* LaunchScreen.storyboard */,
 			);
 			path = HealthHomies;
 			sourceTree = "<group>";
@@ -274,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				787A4DF12B8428EF0018D58F /* Preview Assets.xcassets in Resources */,
+				49C015FA2B886C3D00029BC0 /* LaunchScreen.storyboard in Resources */,
 				787A4DEE2B8428EF0018D58F /* Assets.xcassets in Resources */,
 				787A4E2C2B8434070018D58F /* GoogleService-Info.plist in Resources */,
 			);
@@ -306,6 +313,7 @@
 				787A4DEA2B8428EE0018D58F /* HealthHomiesApp.swift in Sources */,
 				49C015EF2B84774800029BC0 /* HealthHomieTabView.swift in Sources */,
 				49C015F32B84781500029BC0 /* ActivityCard.swift in Sources */,
+				49C015FC2B887A0800029BC0 /* LogView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,10 +481,13 @@
 				DEVELOPMENT_TEAM = C5M6YF2UFL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Health Homie";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please allow access to enjoy all the features of our application";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -508,10 +519,13 @@
 				DEVELOPMENT_TEAM = C5M6YF2UFL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Health Homie";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Please allow access to enjoy all the features of our application";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
