@@ -13,7 +13,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
-    print("hi")
     return true
   }
 }
@@ -22,9 +21,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct HealthHomiesApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var manager = HealthManager()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HealthHomieTabView()
+                .environmentObject(manager)
         }
     }
 }
