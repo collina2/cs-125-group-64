@@ -38,16 +38,19 @@ class HealthManager: ObservableObject {
         
     }
     
+    private func safeQuantity(result: HKStatistics?, error: Error?, unit: HKUnit) -> Double {
+        guard let quantity = result?.sumQuantity(), error == nil else {
+            print("error fetching data: \(String(describing: error))")
+            return 0
+        }
+        return quantity.doubleValue(for: unit)
+    }
+    
     func fetchTodaySteps() {
         let steps = HKQuantityType(.stepCount)
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate)  { _, result, error in
-            guard let quantity = result?.sumQuantity(), error == nil else {
-                print("error fetching todays step data")
-                return
-            }
-            
-            let stepCount = quantity.doubleValue(for: .count())
+            let stepCount = self.safeQuantity(result: result, error: error, unit: .count())
             let activity = Activity(id: 0, title: "Steps Taken", subtitle: "Goal: 10,000", image: "figure.walk", amount: stepCount.formattedString())
             
             DispatchQueue.main.async {
@@ -65,12 +68,7 @@ class HealthManager: ObservableObject {
         let calories = HKQuantityType(.activeEnergyBurned)
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: calories, quantitySamplePredicate: predicate) { _, result, error in
-            guard let quantity = result?.sumQuantity(), error == nil else {
-                print("error fetching todays calorie data")
-                return
-            }
-            
-            let caloriesBurned = quantity.doubleValue(for: .kilocalorie())
+            let caloriesBurned = self.safeQuantity(result: result, error: error, unit: .kilocalorie())
             let activity = Activity(id: 1, title: "Calories Burned", subtitle: "Goal: 900", image: "flame", amount: caloriesBurned.formattedString())
             
             DispatchQueue.main.async {
