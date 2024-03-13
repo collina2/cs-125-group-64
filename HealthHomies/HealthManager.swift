@@ -95,7 +95,7 @@ class HealthManager: ObservableObject {
             if let result = results?.last as? HKQuantitySample {
                 print("weight => \(result.quantity)")
                 DispatchQueue.main.async {
-                    self.userData["weight"] = result.quantity
+                    self.userData["Weight"] = result.quantity
                 }
             }
         }
@@ -106,7 +106,7 @@ class HealthManager: ObservableObject {
             if let result = results?.last as? HKQuantitySample {
                 print("height => \(result.quantity)")
                 DispatchQueue.main.async {
-                    self.userData["height"] = result.quantity
+                    self.userData["Height"] = result.quantity
                 }
             }
         }
