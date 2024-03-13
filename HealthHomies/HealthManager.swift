@@ -19,18 +19,22 @@ class HealthManager: ObservableObject {
     let healthStore = HKHealthStore()
     
     @Published var activities: [String : Activity] = [:]
+    @Published var userData: [String : HKQuantity] = [:]
     
     init() {
         let steps = HKQuantityType(.stepCount)
         let calories = HKQuantityType(.activeEnergyBurned)
+        let height = HKQuantityType(.height)
+        let weight = HKQuantityType(.bodyMass)
         
-        let healthTypes: Set = [steps, calories]
+        let healthTypes: Set = [steps, calories, height, weight]
         
         Task {
             do {
                 try await healthStore.requestAuthorization(toShare: [], read: healthTypes)
                 fetchTodaySteps()
                 fetchTodayCalories()
+                readMostRecentSample()
             } catch {
                 print("error fetching health data")
             }
@@ -81,6 +85,36 @@ class HealthManager: ObservableObject {
         
         healthStore.execute(query)
     }
+    
+    func readMostRecentSample(){
+        let weightType = HKSampleType.quantityType (forIdentifier: HKQuantityTypeIdentifier.bodyMass)!
+        let heightType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier.height)!
+
+        let queryWeight = HKSampleQuery(sampleType: weightType, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, results, error) in
+
+            if let result = results?.last as? HKQuantitySample {
+                print("weight => \(result.quantity)")
+                DispatchQueue.main.async {
+                    self.userData["weight"] = result.quantity
+                }
+            }
+        }
+
+
+        let queryHeight = HKSampleQuery(sampleType: heightType, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, results, error) in
+
+            if let result = results?.last as? HKQuantitySample {
+                print("height => \(result.quantity)")
+                DispatchQueue.main.async {
+                    self.userData["height"] = result.quantity
+                }
+            }
+        }
+
+        healthStore.execute(queryWeight)
+        healthStore.execute(queryHeight)
+    }
+    
 }
 
 extension Double {
