@@ -13,6 +13,12 @@
 		49C015F52B88581F00029BC0 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015F42B88581F00029BC0 /* HealthManager.swift */; };
 		49C015FA2B886C3D00029BC0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49C015F92B886C3D00029BC0 /* LaunchScreen.storyboard */; };
 		49C015FC2B887A0800029BC0 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C015FB2B887A0800029BC0 /* LogView.swift */; };
+		782256B52BA28BD400DC9B60 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 782256B42BA28BD400DC9B60 /* GoogleService-Info.plist */; };
+		782256B72BA28F6900DC9B60 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 782256B62BA28F6900DC9B60 /* FirebaseDatabase */; };
+		782256B92BA28F6900DC9B60 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 782256B82BA28F6900DC9B60 /* FirebaseDatabaseSwift */; };
+		782256BB2BA28F6900DC9B60 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 782256BA2BA28F6900DC9B60 /* FirebaseFirestore */; };
+		782256BD2BA28F6900DC9B60 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 782256BC2BA28F6900DC9B60 /* FirebaseFirestoreSwift */; };
+		782256BF2BA3638800DC9B60 /* TestQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782256BE2BA3638800DC9B60 /* TestQuery.swift */; };
 		787A4DEA2B8428EE0018D58F /* HealthHomiesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */; };
 		787A4DEC2B8428EE0018D58F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787A4DEB2B8428EE0018D58F /* ContentView.swift */; };
 		787A4DEE2B8428EF0018D58F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787A4DED2B8428EF0018D58F /* Assets.xcassets */; };
@@ -24,7 +30,6 @@
 		787A4E1B2B842A720018D58F /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 787A4E1A2B842A720018D58F /* FirebaseAnalyticsSwift */; };
 		787A4E282B8432470018D58F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 787A4E272B8432470018D58F /* FirebaseAnalyticsOnDeviceConversion */; };
 		787A4E2A2B8432470018D58F /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 787A4E292B8432470018D58F /* FirebaseAnalyticsWithoutAdIdSupport */; };
-		787A4E2C2B8434070018D58F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 787A4E2B2B8434070018D58F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,8 @@
 		49C015F62B885D3500029BC0 /* HealthHomies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthHomies.entitlements; sourceTree = "<group>"; };
 		49C015F92B886C3D00029BC0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		49C015FB2B887A0800029BC0 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		782256B42BA28BD400DC9B60 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		782256BE2BA3638800DC9B60 /* TestQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestQuery.swift; sourceTree = "<group>"; };
 		787A4DE62B8428EE0018D58F /* HealthHomies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthHomies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		787A4DE92B8428EE0018D58F /* HealthHomiesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthHomiesApp.swift; sourceTree = "<group>"; };
 		787A4DEB2B8428EE0018D58F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,7 +69,6 @@
 		787A4E002B8428EF0018D58F /* HealthHomiesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HealthHomiesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		787A4E042B8428EF0018D58F /* HealthHomiesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthHomiesUITests.swift; sourceTree = "<group>"; };
 		787A4E062B8428EF0018D58F /* HealthHomiesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthHomiesUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		787A4E2B2B8434070018D58F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,10 +76,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				782256B92BA28F6900DC9B60 /* FirebaseDatabaseSwift in Frameworks */,
+				782256B72BA28F6900DC9B60 /* FirebaseDatabase in Frameworks */,
 				787A4E1B2B842A720018D58F /* FirebaseAnalyticsSwift in Frameworks */,
 				787A4E282B8432470018D58F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				787A4E192B842A720018D58F /* FirebaseAnalytics in Frameworks */,
 				787A4E2A2B8432470018D58F /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				782256BB2BA28F6900DC9B60 /* FirebaseFirestore in Frameworks */,
+				782256BD2BA28F6900DC9B60 /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,13 +133,14 @@
 				787A4DEB2B8428EE0018D58F /* ContentView.swift */,
 				49C015FB2B887A0800029BC0 /* LogView.swift */,
 				787A4DED2B8428EF0018D58F /* Assets.xcassets */,
-				787A4E2B2B8434070018D58F /* GoogleService-Info.plist */,
+				782256B42BA28BD400DC9B60 /* GoogleService-Info.plist */,
 				787A4DEF2B8428EF0018D58F /* Preview Content */,
 				49C015EE2B84774800029BC0 /* HealthHomieTabView.swift */,
 				49C015F02B84779F00029BC0 /* HomeView.swift */,
 				49C015F22B84781500029BC0 /* ActivityCard.swift */,
 				49C015F42B88581F00029BC0 /* HealthManager.swift */,
 				49C015F92B886C3D00029BC0 /* LaunchScreen.storyboard */,
+				782256BE2BA3638800DC9B60 /* TestQuery.swift */,
 			);
 			path = HealthHomies;
 			sourceTree = "<group>";
@@ -187,6 +198,10 @@
 				787A4E1A2B842A720018D58F /* FirebaseAnalyticsSwift */,
 				787A4E272B8432470018D58F /* FirebaseAnalyticsOnDeviceConversion */,
 				787A4E292B8432470018D58F /* FirebaseAnalyticsWithoutAdIdSupport */,
+				782256B62BA28F6900DC9B60 /* FirebaseDatabase */,
+				782256B82BA28F6900DC9B60 /* FirebaseDatabaseSwift */,
+				782256BA2BA28F6900DC9B60 /* FirebaseFirestore */,
+				782256BC2BA28F6900DC9B60 /* FirebaseFirestoreSwift */,
 			);
 			productName = HealthHomies;
 			productReference = 787A4DE62B8428EE0018D58F /* HealthHomies.app */;
@@ -280,9 +295,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				787A4DF12B8428EF0018D58F /* Preview Assets.xcassets in Resources */,
+				782256B52BA28BD400DC9B60 /* GoogleService-Info.plist in Resources */,
 				49C015FA2B886C3D00029BC0 /* LaunchScreen.storyboard in Resources */,
 				787A4DEE2B8428EF0018D58F /* Assets.xcassets in Resources */,
-				787A4E2C2B8434070018D58F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				782256BF2BA3638800DC9B60 /* TestQuery.swift in Sources */,
 				787A4DEC2B8428EE0018D58F /* ContentView.swift in Sources */,
 				49C015F52B88581F00029BC0 /* HealthManager.swift in Sources */,
 				49C015F12B84779F00029BC0 /* HomeView.swift in Sources */,
@@ -478,7 +494,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HealthHomies/Preview Content\"";
-				DEVELOPMENT_TEAM = C5M6YF2UFL;
+				DEVELOPMENT_TEAM = CLT9C6YRAH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Health Homie";
@@ -496,7 +512,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cs125.HealthHomies;
+				PRODUCT_BUNDLE_IDENTIFIER = cs125.HealthHomies2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -517,7 +533,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HealthHomies/Preview Content\"";
-				DEVELOPMENT_TEAM = C5M6YF2UFL;
+				DEVELOPMENT_TEAM = CLT9C6YRAH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Health Homie";
@@ -535,7 +551,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cs125.HealthHomies;
+				PRODUCT_BUNDLE_IDENTIFIER = cs125.HealthHomies2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -688,6 +704,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		782256B62BA28F6900DC9B60 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 787A4E172B842A720018D58F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		782256B82BA28F6900DC9B60 /* FirebaseDatabaseSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 787A4E172B842A720018D58F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabaseSwift;
+		};
+		782256BA2BA28F6900DC9B60 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 787A4E172B842A720018D58F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		782256BC2BA28F6900DC9B60 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 787A4E172B842A720018D58F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
 		787A4E182B842A720018D58F /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 787A4E172B842A720018D58F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
