@@ -109,47 +109,12 @@ struct LogView: View {
             if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
                 foodSelections = loadedData
             }
-            waterIntake = loadData(forKey: "waterIntake") as! Int
+            waterIntake = loadInt(forKey: "waterIntake") 
             
         }
 
     }
     
-}
-
-// TODO: put these in a different file
-
-func saveData(_ data: Any, forKey key: String) {
-    UserDefaults.standard.set(data, forKey: key)
-}
-
-func saveEncodedData<T: Encodable>(_ data: T, forKey key: String) {
-    do {
-        let dataEncoded = try PropertyListEncoder().encode(data)
-        UserDefaults.standard.set(dataEncoded, forKey: key)
-        print("Data saved to UserDefaults")
-    } catch {
-        print("Error encoding data: \(error)")
-    }
-}
-
-func loadData(forKey key: String) -> Any {
-    return UserDefaults.standard.integer(forKey: key)
-}
-
-func loadDecodedData<T: Decodable>(forKey key: String) -> T? {
-    if let dataEncoded = UserDefaults.standard.data(forKey: key) {
-        do {
-            let decodedData = try PropertyListDecoder().decode(T.self, from: dataEncoded)
-            print("Data loaded from UserDefaults")
-            return decodedData
-        } catch {
-            print("Error decoding data: \(error)")
-        }
-    } else {
-        print("No data found in UserDefaults")
-    }
-    return nil
 }
 
 

@@ -11,6 +11,7 @@ import FirebaseAnalytics
 
 struct HomeView: View {
     @EnvironmentObject var manager: HealthManager
+    @State var waterIntake = 0
     
     var body: some View {
         
@@ -24,14 +25,6 @@ struct HomeView: View {
                 ForEach(manager.activities.sorted(by: { $0.value.id < $1.value.id }), id: \.key) { item in
                     ActivityCard(activity: item.value)
                 }
-                let waterIntake = loadData(forKey: "waterIntake") as? Int ?? 0
-                ActivityCard(activity: Activity(id: 2, title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups"))
- 
-                
-                ActivityCard(activity: Activity(id: 3, title: "Protein Consumed", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "0 grams"))
-                
-                ActivityCard(activity: Activity(id: 4, title: "Carbs Consumed", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "0 grams"))
-                
                 
             }
             .padding(.horizontal)

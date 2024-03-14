@@ -29,6 +29,19 @@ class HealthManager: ObservableObject {
         
         let healthTypes: Set = [steps, calories, height, weight]
         
+        let waterIntake = loadInt(forKey: "waterIntake")
+        activities["waterIntake"] = Activity(id: 2, title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
+        
+        let proteinConsumed = loadInt(forKey: "proteinConsumed")
+        activities["proteinConsumed"] = Activity(id: 3, title: "Protein Consumed", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "\(proteinConsumed) grams")
+        
+        let carbsConsumed = loadInt(forKey: "carbsConsumed")
+        activities["carbsConsumed"] = Activity(id: 4, title: "Carbs Consumed", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "\(carbsConsumed) grams")
+        
+        let overallScore = loadInt(forKey: "overallScore")
+        activities["overallScore"] = Activity(id: 5, title: "Overall Score", subtitle: "Goal: 100%", image: "face.smiling", amount: "\(overallScore)%")
+        
+        
         Task {
             do {
                 try await healthStore.requestAuthorization(toShare: [], read: healthTypes)
