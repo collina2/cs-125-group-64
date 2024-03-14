@@ -11,6 +11,7 @@ import FirebaseAnalytics
 
 struct HomeView: View {
     @EnvironmentObject var manager: HealthManager
+    
     var body: some View {
         
         VStack(alignment: .leading) {
@@ -18,14 +19,14 @@ struct HomeView: View {
                 .font(.largeTitle)
                 .bold()
                 .padding()
-            
             LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2), spacing: 20) {
                 // TODO: have the goals change depending on their exercise, height, weight, etc.
                 ForEach(manager.activities.sorted(by: { $0.value.id < $1.value.id }), id: \.key) { item in
                     ActivityCard(activity: item.value)
                 }
-                
-                ActivityCard(activity: Activity(id: 2, title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "0 cups"))
+                let waterIntake = loadData(forKey: "waterIntake") as? Int ?? 0
+                ActivityCard(activity: Activity(id: 2, title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups"))
+ 
                 
                 ActivityCard(activity: Activity(id: 3, title: "Protein Consumed", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "0 grams"))
                 
@@ -50,6 +51,7 @@ struct HomeView: View {
         .analyticsScreen(name: "\(HomeView.self)", extraParameters: ["test1": "test1 value"])
 
     }
+    
 }
 
 #Preview {

@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAnalyticsSwift
 import FirebaseAnalytics
+import Foundation
 
 struct LogView: View {
     @State private var waterIntake = 0
@@ -19,6 +20,7 @@ struct LogView: View {
     let servingSizes = [0.5, 1, 2] // Example serving sizes
     
     var body: some View {
+        
         VStack(alignment: .leading, spacing: 20) {
             Text("Update water intake")
                 .font(.subheadline)
@@ -26,6 +28,7 @@ struct LogView: View {
             HStack(spacing: 20) {
                 Button(action: {
                     waterIntake -= 1
+                    saveData(waterIntake, forKey: "waterIntake")
                 }) {
                     Image(systemName: "minus")
                         .font(.title)
@@ -40,6 +43,7 @@ struct LogView: View {
                 
                 Button(action: {
                     waterIntake += 1
+                    saveData(waterIntake, forKey: "waterIntake")
                 }) {
                     Image(systemName: "plus")
                         .font(.title)
@@ -78,6 +82,7 @@ struct LogView: View {
                 
                 Button(action: {
                     foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
+                    saveEncodedData(foodSelections, forKey: "foodSelections")
                 }) {
                     Text("Log Food")
                         .font(.headline)
@@ -99,9 +104,54 @@ struct LogView: View {
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .analyticsScreen(name: "\(LogView.self)", extraParameters: ["test3": "test3 value"])
+        .onAppear {
+            // Initialize data when the view appears
+            if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
+                foodSelections = loadedData
+            }
+            waterIntake = loadData(forKey: "waterIntake") as! Int
+            
+        }
 
     }
+    
 }
+
+// TODO: put these in a different file
+
+func saveData(_ data: Any, forKey key: String) {
+    UserDefaults.standard.set(data, forKey: key)
+}
+
+func saveEncodedData<T: Encodable>(_ data: T, forKey key: String) {
+    do {
+        let dataEncoded = try PropertyListEncoder().encode(data)
+        UserDefaults.standard.set(dataEncoded, forKey: key)
+        print("Data saved to UserDefaults")
+    } catch {
+        print("Error encoding data: \(error)")
+    }
+}
+
+func loadData(forKey key: String) -> Any {
+    return UserDefaults.standard.integer(forKey: key)
+}
+
+func loadDecodedData<T: Decodable>(forKey key: String) -> T? {
+    if let dataEncoded = UserDefaults.standard.data(forKey: key) {
+        do {
+            let decodedData = try PropertyListDecoder().decode(T.self, from: dataEncoded)
+            print("Data loaded from UserDefaults")
+            return decodedData
+        } catch {
+            print("Error decoding data: \(error)")
+        }
+    } else {
+        print("No data found in UserDefaults")
+    }
+    return nil
+}
+
 
 #Preview {
     LogView()
