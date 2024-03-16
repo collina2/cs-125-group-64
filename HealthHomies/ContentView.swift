@@ -9,11 +9,16 @@ import SwiftUI
 import FirebaseAnalyticsSwift
 import FirebaseAnalytics
 import HealthKit
+import FirebaseCore
+import FirebaseFirestore
 
 struct ContentView: View {
     @EnvironmentObject var manager: HealthManager
     @State private var selectedGoal = "Strength"
     let goalOptions = ["Strength", "Diet", "Hydration"]
+    
+    // This is imported so the funcitions inside the class can be used
+    @StateObject var dbManager = FirestoreManager()
     
     var body: some View {
         VStack {
@@ -31,6 +36,24 @@ struct ContentView: View {
                         Text("\(item.key): \(item.value)")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                }
+            }
+            
+            Divider()
+
+            Button("See List of Tricep Exercises") {
+                //The next few lines just waits fort the function to be called, and then the data is printed to the console
+                Task {
+                    await dbManager.fetchFirebaseData()
+                }
+            }
+            
+            // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
+            if !dbManager.fetchedData.isEmpty {
+                ForEach(dbManager.fetchedData.indices, id: \.self) { index in
+                    let item = dbManager.fetchedData[index]
+                    // Access the "name" key of each dictionary
+                    Text(item["name"] as? String ?? "Unknown")
                 }
             }
             
