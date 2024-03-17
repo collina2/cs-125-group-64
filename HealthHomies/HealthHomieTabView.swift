@@ -22,7 +22,13 @@ struct HealthHomieTabView: View {
             LogView()
                 .tag("Log")
                 .tabItem {
-                    Image(systemName: "plus.circle.fill")
+                    Image(systemName: "fork.knife.circle.fill")
+                }
+            
+            ExerciseView()
+                .tag("Exercise")
+                .tabItem {
+                    Image(systemName: "dumbbell.fill")
                 }
             
             ContentView()
