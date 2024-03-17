@@ -127,8 +127,8 @@ class HealthManager: ObservableObject {
     }
     
     func saveFoodDetails(fetchedFoods: [Food] = []) {
-        var foodSelections: [String: Double] = [:]
-        if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
+        var foodSelections: [String: ServingSize] = [:]
+        if let loadedData: [String: ServingSize] = loadDecodedData(forKey: "foodSelections") {
             foodSelections = loadedData
         }
         
@@ -137,7 +137,7 @@ class HealthManager: ObservableObject {
             // Find the corresponding Food struct in dbManager.fetchedFoods
             if let food = fetchedFoods.first(where: { $0.name == foodName }) {
                 // Calculate the amount to add
-                let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.protein)
+                let amountFromSelection = Double(selectionValue.amount) / Double(food.servingSize.amount) * Double(food.protein)
                 proteinCount += amountFromSelection
             }
         }
@@ -148,7 +148,7 @@ class HealthManager: ObservableObject {
             // Find the corresponding Food struct in dbManager.fetchedFoods
             if let food = fetchedFoods.first(where: { $0.name == foodName }) {
                 // Calculate the amount to add
-                let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.carbs)
+                let amountFromSelection = Double(selectionValue.amount) / Double(food.servingSize.amount) * Double(food.carbs)
                 carbCount += amountFromSelection
             }
         }
@@ -157,7 +157,7 @@ class HealthManager: ObservableObject {
     
     func createActivity(key: String) -> Activity {
         let selectedFocusGoal = loadString(forKey: "selectedGoal") ?? "Overall"
-        var amount = loadInt(forKey: key)
+        let amount = loadInt(forKey: key)
         
         
         var goal = 100

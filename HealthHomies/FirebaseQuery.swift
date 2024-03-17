@@ -37,9 +37,19 @@ struct Food: Hashable {
     }
 }
 
-struct ServingSize {
+struct ServingSize: Hashable, Encodable, Decodable {
     let amount: Int
     let unit: String
+    
+    // Implementing hash(into:) method
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(amount)
+    }
+
+    // Implementing == method to compare two Food structs
+    static func == (lhs: ServingSize, rhs: ServingSize) -> Bool {
+        return lhs.amount == rhs.amount
+    }
 }
 
 func extractServingSize(from string: String) -> ServingSize {

@@ -13,12 +13,12 @@ import Foundation
 struct LogView: View {
     @State private var waterIntake = 0
     @State private var selectedFoodItem: String = ""
-    @State private var selectedServingSize = 0.5
-    @State private var foodSelections = [String: Double]()
+    @State private var selectedServingSize: ServingSize = ServingSize(amount: 1, unit: "g")
+    @State private var foodSelections = [String: ServingSize]()
     @EnvironmentObject var manager: HealthManager
     @StateObject var dbManager = FirestoreManager()
     
-    let servingSizes = [0.5, 1, 2] // Example serving sizes
+    @State private var servingSizes: [ServingSize] = []
     
     var body: some View {
         
@@ -81,19 +81,28 @@ struct LogView: View {
                     
                     // TODO: change serving size to match each food item
                     Text("Serving Size")
-                    Picker("Serving Size", selection: $selectedServingSize) {
-                        ForEach(servingSizes, id: \.self) { size in
-                            Text("\(size.formattedServingSize())")
+                    if !servingSizes.isEmpty {
+                        Picker("Serving Size", selection: $selectedServingSize) {
+                            ForEach(servingSizes, id: \.amount) { size in
+                                Text(size.toString())
+                                    .tag(size.amount)
+                            }
                         }
+                        .task {
+                            selectedServingSize = ServingSize(amount: 1, unit: "g")
+                            servingSizes.append(ServingSize(amount: 2, unit: "g"))
+                            servingSizes.append(ServingSize(amount: 4, unit: "g"))
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                 }
                 .padding() // Add padding to the VStack
                 
                 Button(action: {
                     if selectedFoodItem != "" {
-                        foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
+                        let amount = selectedServingSize.amount + (foodSelections[selectedFoodItem]?.amount ?? 0)
+                        foodSelections[selectedFoodItem] = ServingSize(amount: amount, unit: selectedServingSize.unit)
                         saveEncodedData(foodSelections, forKey: "foodSelections")
                         
                         // convert saved data to protein and carb amount:
@@ -119,7 +128,7 @@ struct LogView: View {
             List {
                 Section(header: Text("Logged Food and Amount")) {
                     ForEach(foodSelections.sorted(by: { $0.key < $1.key }), id: \.key) { food, servingSize in
-                        Text("\(food): \(servingSize.formattedServingSize())")
+                        Text("\(food): \(servingSize.toString())")
                     }
                 }
             }
@@ -132,7 +141,7 @@ struct LogView: View {
         .analyticsScreen(name: "\(LogView.self)", extraParameters: ["test3": "test3 value"])
         .onAppear {
             // Initialize data when the view appears
-            if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
+            if let loadedData: [String: ServingSize] = loadDecodedData(forKey: "foodSelections") {
                 foodSelections = loadedData
             }
             waterIntake = loadInt(forKey: "waterIntake")
@@ -152,9 +161,8 @@ struct LogView: View {
     LogView()
 }
 
-extension Double {
-    func formattedServingSize() -> String {
-        let size = self.formattedString()
-        return size + " pounds"
+extension ServingSize {
+    func toString() -> String {
+        return "\(self.amount) \(self.unit)"
     }
 }
