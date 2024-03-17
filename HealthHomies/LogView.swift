@@ -12,11 +12,12 @@ import Foundation
 
 struct LogView: View {
     @State private var waterIntake = 0
-    @State private var selectedFoodItem = "Chicken"
+    @State private var selectedFoodItem: String = ""
     @State private var selectedServingSize = 0.5
     @State private var foodSelections = [String: Double]()
+    @EnvironmentObject var manager: HealthManager
+    @StateObject var dbManager = FirestoreManager()
     
-    let foodOptions = ["Chicken", "Orange", "Bread"]
     let servingSizes = [0.5, 1, 2] // Example serving sizes
     
     var body: some View {
@@ -29,6 +30,8 @@ struct LogView: View {
                 Button(action: {
                     waterIntake -= 1
                     saveData(waterIntake, forKey: "waterIntake")
+                    manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
+                    
                 }) {
                     Image(systemName: "minus")
                         .font(.title)
@@ -44,6 +47,7 @@ struct LogView: View {
                 Button(action: {
                     waterIntake += 1
                     saveData(waterIntake, forKey: "waterIntake")
+                    manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
                 }) {
                     Image(systemName: "plus")
                         .font(.title)
@@ -59,16 +63,23 @@ struct LogView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Food Item")
-                    Picker("Food Item", selection: $selectedFoodItem) {
-                        ForEach(foodOptions, id: \.self) { option in
-                            Text(option)
+                    if !dbManager.fetchedFoods.isEmpty {
+                        Picker("Food Item", selection: $selectedFoodItem) {
+                            ForEach(dbManager.fetchedFoods, id: \.id) { food in
+                                Text(food.name)
+                                    .tag(food.name)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
+                        .task {
+                            selectedFoodItem = dbManager.fetchedFoods[0].name
                         }
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                     
                     Divider() // Add a divider for separation
                     
+                    // TODO: change serving size to match each food item
                     Text("Serving Size")
                     Picker("Serving Size", selection: $selectedServingSize) {
                         ForEach(servingSizes, id: \.self) { size in
@@ -81,8 +92,18 @@ struct LogView: View {
                 .padding() // Add padding to the VStack
                 
                 Button(action: {
-                    foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
-                    saveEncodedData(foodSelections, forKey: "foodSelections")
+                    if selectedFoodItem != "" {
+                        foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
+                        saveEncodedData(foodSelections, forKey: "foodSelections")
+                        
+                        // convert saved data to protein and carb amount:
+                        manager.saveFoodDetails(fetchedFoods: dbManager.fetchedFoods)
+                        
+                        manager.activities["proteinConsumed"] = manager.createActivity(key: "proteinConsumed")
+                        manager.activities["carbsConsumed"] = manager.createActivity(key: "carbsConsumed")
+                        
+                    }
+                    
                 }) {
                     Text("Log Food")
                         .font(.headline)
@@ -95,11 +116,16 @@ struct LogView: View {
             }
             
             // Display selected food items and serving sizes
-            VStack(alignment: .leading, spacing: 5) {
-                ForEach(foodSelections.sorted(by: { $0.key < $1.key }), id: \.key) { food, servingSize in
-                    Text("\(food): \(servingSize.formattedServingSize())")
+            List {
+                Section(header: Text("Logged Food and Amount")) {
+                    ForEach(foodSelections.sorted(by: { $0.key < $1.key }), id: \.key) { food, servingSize in
+                        Text("\(food): \(servingSize.formattedServingSize())")
+                    }
                 }
             }
+            
+            Divider()
+            
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -109,47 +135,16 @@ struct LogView: View {
             if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
                 foodSelections = loadedData
             }
-            waterIntake = loadData(forKey: "waterIntake") as! Int
+            waterIntake = loadInt(forKey: "waterIntake")
+            
+            Task {
+                await dbManager.fetchFoods()
+            }
             
         }
 
     }
     
-}
-
-// TODO: put these in a different file
-
-func saveData(_ data: Any, forKey key: String) {
-    UserDefaults.standard.set(data, forKey: key)
-}
-
-func saveEncodedData<T: Encodable>(_ data: T, forKey key: String) {
-    do {
-        let dataEncoded = try PropertyListEncoder().encode(data)
-        UserDefaults.standard.set(dataEncoded, forKey: key)
-        print("Data saved to UserDefaults")
-    } catch {
-        print("Error encoding data: \(error)")
-    }
-}
-
-func loadData(forKey key: String) -> Any {
-    return UserDefaults.standard.integer(forKey: key)
-}
-
-func loadDecodedData<T: Decodable>(forKey key: String) -> T? {
-    if let dataEncoded = UserDefaults.standard.data(forKey: key) {
-        do {
-            let decodedData = try PropertyListDecoder().decode(T.self, from: dataEncoded)
-            print("Data loaded from UserDefaults")
-            return decodedData
-        } catch {
-            print("Error decoding data: \(error)")
-        }
-    } else {
-        print("No data found in UserDefaults")
-    }
-    return nil
 }
 
 

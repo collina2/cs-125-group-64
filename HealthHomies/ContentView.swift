@@ -9,26 +9,94 @@ import SwiftUI
 import FirebaseAnalyticsSwift
 import FirebaseAnalytics
 import HealthKit
+import FirebaseCore
+import FirebaseFirestore
 
 struct ContentView: View {
     @EnvironmentObject var manager: HealthManager
+    @State private var selectedGoal = "Overall"
+    let goalOptions = ["Overall", "Diet", "Hydration", "Strength", "Cardio"]
+    
+    // This is imported so the funcitions inside the class can be used
+    @StateObject var dbManager = FirestoreManager()
     
     var body: some View {
-        // TODO: have the user enter personal data here
-        // e.g. height, weight, personal goals
-        // you can also retrieve values from the Health app
         VStack {
-            Image(systemName: "person")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("User Data")
-            ForEach(manager.userData.sorted(by: { $0.key < $1.key }), id: \.key) { item in
-                Text("\(item.key): \(item.value)")
+            HStack {
+                Image(systemName: "person")
+                    .font(.title)
+                    .foregroundStyle(.tint)
+                
+                VStack {
+                    Text("User Data")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.title)
+                        .bold()
+                    ForEach(manager.userData.sorted(by: { $0.key < $1.key }), id: \.key) { item in
+                        Text("\(item.key): \(item.value)")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
             }
+            
+            Divider()
+            
+            HStack {
+                    
+                    Text("Focus Goal:")
+                    Picker("Goal", selection: $selectedGoal) {
+                        ForEach(goalOptions, id: \.self) { option in
+                            Text(option)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
+                    .onChange(of: selectedGoal) {
+                        saveData(selectedGoal, forKey: "selectedGoal")
+                        manager.activities["proteinConsumed"] = manager.createActivity(key: "proteinConsumed")
+                        manager.activities["carbsConsumed"] = manager.createActivity(key: "carbsConsumed")
+                        manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
+                        manager.activities["steps"] = manager.createActivity(key: "steps")
+                        manager.activities["caloriesBurned"] = manager.createActivity(key: "caloriesBurned")
+
+                    }
+                
+
+            }
+            
+            Divider()
+            
+            // TODO: change to muscle group selector
+            
+            Button("See List of Tricep Exercises") {
+                //The next few lines just waits fort the function to be called, and then the data is printed to the console
+                Task {
+                    await dbManager.fetchFirebaseData()
+                }
+            }
+            
+            List {
+                // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
+                Section(header: Text("Exercises")) {
+                    ForEach(dbManager.fetchedData.indices, id: \.self) { index in
+                        let item = dbManager.fetchedData[index]
+                        // Access the "name" key of each dictionary
+                        Text(item["name"] as? String ?? "Unknown")
+                        
+                    }
+                }
+            }
+            
+            Divider()
+            
         }
         .padding()
+        .frame(maxHeight: .infinity, alignment: .top)
         .analyticsScreen(name: "\(ContentView.self)", extraParameters: ["test2": "test2 value"])
-
+        .onAppear {
+            selectedGoal = loadString(forKey: "selectedGoal") ?? goalOptions[0]
+            print("loadData: \(loadString(forKey: "selectedGoal") ?? "not found")")
+        }
     }
 }
 

@@ -11,6 +11,7 @@ import FirebaseAnalytics
 
 struct HomeView: View {
     @EnvironmentObject var manager: HealthManager
+    @State var waterIntake = 0
     
     var body: some View {
         
@@ -21,31 +22,41 @@ struct HomeView: View {
                 .padding()
             LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2), spacing: 20) {
                 // TODO: have the goals change depending on their exercise, height, weight, etc.
-                ForEach(manager.activities.sorted(by: { $0.value.id < $1.value.id }), id: \.key) { item in
-                    ActivityCard(activity: item.value)
+                ForEach(manager.activities.values.sorted(by: { $0.id > $1.id }), id: \.id) { activity in
+                    ActivityCard(activity: activity)
                 }
-                let waterIntake = loadData(forKey: "waterIntake") as? Int ?? 0
-                ActivityCard(activity: Activity(id: 2, title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups"))
- 
-                
-                ActivityCard(activity: Activity(id: 3, title: "Protein Consumed", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "0 grams"))
-                
-                ActivityCard(activity: Activity(id: 4, title: "Carbs Consumed", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "0 grams"))
-                
                 
             }
             .padding(.horizontal)
+            .onReceive(manager.$activities) { _ in
+                // This block gets called whenever manager.activities changes
+                // Add any additional logic here to refresh the view
+
+            }
             
-            // TODO: Have a message stating what the user is lacking the most
-            // i.e. find the max percentage difference of user stat and their goal,
-            // and print a message relating to that
-            // e.g. if their worst stat is water intake, then print this:
-            Text("Looks like you need to drink more water!")
-                .font(.title)
-                .padding()
+            // Recommendation System
+            VStack(alignment: .leading) {
+                List {
+                    Section(header: Text("Recommendations")) { // Title for the list
+                        ForEach(manager.activities.values.sorted(by: { Double($0.amount) / Double($0.goal) < Double($1.amount) / Double($1.goal) }).prefix(7), id: \.id) { activity in
+                            if activity.title != "Overall Score" && activity.amount < activity.goal {
+                                Text(manager.getRecommendationString(title: activity.title))
+                            }
+                        }
+                    }
+                }
+            }
+            .padding()
+                
+            Divider()
+                .padding(.bottom)
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .onAppear {
+        
+            
+        }
         
         
         .analyticsScreen(name: "\(HomeView.self)", extraParameters: ["test1": "test1 value"])
