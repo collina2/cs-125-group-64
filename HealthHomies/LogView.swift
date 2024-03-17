@@ -95,6 +95,12 @@ struct LogView: View {
                         foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
                         saveEncodedData(foodSelections, forKey: "foodSelections")
                         
+                        // convert saved data to protein and carb amount:
+                        manager.saveFoodDetails(fetchedFoods: dbManager.fetchedFoods)
+                        
+                        manager.activities["proteinConsumed"] = manager.createActivity(key: "proteinConsumed")
+                        manager.activities["carbsConsumed"] = manager.createActivity(key: "carbsConsumed")
+                        
                     }
                     
                 }) {
@@ -109,11 +115,16 @@ struct LogView: View {
             }
             
             // Display selected food items and serving sizes
-            VStack(alignment: .leading, spacing: 5) {
-                ForEach(foodSelections.sorted(by: { $0.key < $1.key }), id: \.key) { food, servingSize in
-                    Text("\(food): \(servingSize.formattedServingSize())")
+            List {
+                Section(header: Text("Logged Food and Amount")) {
+                    ForEach(foodSelections.sorted(by: { $0.key < $1.key }), id: \.key) { food, servingSize in
+                        Text("\(food): \(servingSize.formattedServingSize())")
+                    }
                 }
             }
+            
+            Divider()
+            
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -128,8 +139,6 @@ struct LogView: View {
             Task {
                 await dbManager.fetchFoods()
             }
-            
-            
             
         }
 

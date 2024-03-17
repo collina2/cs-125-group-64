@@ -12,7 +12,6 @@ import FirebaseAnalytics
 struct HomeView: View {
     @EnvironmentObject var manager: HealthManager
     @State var waterIntake = 0
-    @StateObject var dbManager = FirestoreManager()
     
     var body: some View {
         
@@ -49,19 +48,14 @@ struct HomeView: View {
             }
             .padding()
                 
-            
+            Divider()
+                .padding(.bottom)
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
-            Task {
-                await dbManager.fetchFoods()
-            }
+        
             
-            if !dbManager.fetchedFoods.isEmpty {
-                manager.activities["proteinConsumed"] = manager.createActivity(key: "proteinConsumed", fetchedFoods: dbManager.fetchedFoods)
-                manager.activities["carbsConsumed"] = manager.createActivity(key: "carbsConsumed", fetchedFoods: dbManager.fetchedFoods)
-            }
         }
         
         

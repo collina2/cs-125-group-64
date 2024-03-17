@@ -17,7 +17,6 @@ extension Date {
 class HealthManager: ObservableObject {
     
     let healthStore = HKHealthStore()
-    var dbManager = FirestoreManager()
     
     @Published var activities: [String : Activity] = [:]
     @Published var userData: [String : HKQuantity] = [:]
@@ -126,13 +125,39 @@ class HealthManager: ObservableObject {
         return idCounter
     }
     
-    func createActivity(key: String, fetchedFoods: [Food] = []) -> Activity {
-        let selectedFocusGoal = loadString(forKey: "selectedGoal") ?? "Overall"
-        var amount = loadInt(forKey: key)
+    func saveFoodDetails(fetchedFoods: [Food] = []) {
         var foodSelections: [String: Double] = [:]
         if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
             foodSelections = loadedData
         }
+        
+        var proteinCount: Double = 0.0
+        for (foodName, selectionValue) in foodSelections {
+            // Find the corresponding Food struct in dbManager.fetchedFoods
+            if let food = fetchedFoods.first(where: { $0.name == foodName }) {
+                // Calculate the amount to add
+                let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.protein)
+                proteinCount += amountFromSelection
+            }
+        }
+        saveData(Int(proteinCount), forKey: "proteinConsumed")
+        
+        var carbCount: Double = 0.0
+        for (foodName, selectionValue) in foodSelections {
+            // Find the corresponding Food struct in dbManager.fetchedFoods
+            if let food = fetchedFoods.first(where: { $0.name == foodName }) {
+                // Calculate the amount to add
+                let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.carbs)
+                carbCount += amountFromSelection
+            }
+        }
+        saveData(Int(carbCount), forKey: "carbsConsumed")
+    }
+    
+    func createActivity(key: String) -> Activity {
+        let selectedFocusGoal = loadString(forKey: "selectedGoal") ?? "Overall"
+        var amount = loadInt(forKey: key)
+        
         
         var goal = 100
         var unit = "%"
@@ -155,16 +180,8 @@ class HealthManager: ObservableObject {
             title = "Protein"
             unit = "grams"
             image = "fork.knife.circle"
-            var amountToAdd: Double = 0.0
-            for (foodName, selectionValue) in foodSelections {
-                // Find the corresponding Food struct in dbManager.fetchedFoods
-                if let food = fetchedFoods.first(where: { $0.name == foodName }) {
-                    // Calculate the amount to add
-                    let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.protein)
-                    amountToAdd += amountFromSelection
-                }
-            }
-            amount = Int(amountToAdd)
+            
+            
         case "carbsConsumed":
             goal = 200
             if selectedFocusGoal == "Diet" {
@@ -173,28 +190,14 @@ class HealthManager: ObservableObject {
             title = "Carbohydrates"
             unit = "grams"
             image = "fork.knife.circle"
-            var amountToAdd: Double = 0.0
-            print("CARBS UPDATED")
-            for (foodName, selectionValue) in foodSelections {
-                print("IN FOOD LOOP")
-                // Find the corresponding Food struct in dbManager.fetchedFoods
-                if let food = fetchedFoods.first(where: { $0.name == foodName }) {
-                    // Calculate the amount to add
-                    let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.carbs)
-                    amountToAdd += amountFromSelection
-                    print("ADDED \(amountToAdd)")
-                } else {
-                    print("fetchedFoods \(fetchedFoods.count): \(fetchedFoods)")
-                }
-            }
-            amount = Int(amountToAdd)
+            
         case "caloriesBurned":
             goal = 900
             if selectedFocusGoal == "Cardio" {
                 goal = 1200
             }
             title = "Calories Burned"
-            unit = "calories"
+            unit = "cals"
             image = "flame"
         case "steps":
             goal = 10000

@@ -40,23 +40,6 @@ struct ContentView: View {
             }
             
             Divider()
-
-            Button("See List of Tricep Exercises") {
-                //The next few lines just waits fort the function to be called, and then the data is printed to the console
-                Task {
-                    await dbManager.fetchFirebaseData()
-                }
-            }
-            
-            // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
-            ForEach(dbManager.fetchedData.indices, id: \.self) { index in
-                let item = dbManager.fetchedData[index]
-                // Access the "name" key of each dictionary
-                Text(item["name"] as? String ?? "Unknown")
-                
-            }
-            
-            Divider()
             
             HStack {
                     
@@ -70,11 +53,40 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                     .onChange(of: selectedGoal) {
                         saveData(selectedGoal, forKey: "selectedGoal")
-       
+                        manager.activities["proteinConsumed"] = manager.createActivity(key: "proteinConsumed")
+                        manager.activities["carbsConsumed"] = manager.createActivity(key: "carbsConsumed")
+                        manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
+                        manager.activities["steps"] = manager.createActivity(key: "steps")
+                        manager.activities["caloriesBurned"] = manager.createActivity(key: "caloriesBurned")
+
                     }
                 
 
             }
+            
+            Divider()
+            
+            Button("See List of Tricep Exercises") {
+                //The next few lines just waits fort the function to be called, and then the data is printed to the console
+                Task {
+                    await dbManager.fetchFirebaseData()
+                }
+            }
+            
+            List {
+                // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
+                Section(header: Text("Exercises")) {
+                    ForEach(dbManager.fetchedData.indices, id: \.self) { index in
+                        let item = dbManager.fetchedData[index]
+                        // Access the "name" key of each dictionary
+                        Text(item["name"] as? String ?? "Unknown")
+                        
+                    }
+                }
+            }
+            
+            Divider()
+            
         }
         .padding()
         .frame(maxHeight: .infinity, alignment: .top)

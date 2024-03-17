@@ -15,7 +15,6 @@ func saveEncodedData<T: Encodable>(_ data: T, forKey key: String) {
     do {
         let dataEncoded = try PropertyListEncoder().encode(data)
         UserDefaults.standard.set(dataEncoded, forKey: key)
-        print("Data saved to UserDefaults")
     } catch {
         print("Error encoding data: \(error)")
     }
@@ -33,7 +32,6 @@ func loadDecodedData<T: Decodable>(forKey key: String) -> T? {
     if let dataEncoded = UserDefaults.standard.data(forKey: key) {
         do {
             let decodedData = try PropertyListDecoder().decode(T.self, from: dataEncoded)
-            print("Data loaded from UserDefaults")
             return decodedData
         } catch {
             print("Error decoding data: \(error)")
