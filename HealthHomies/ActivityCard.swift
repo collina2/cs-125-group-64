@@ -12,7 +12,8 @@ struct Activity {
     let title: String
     let subtitle: String
     let image: String
-    let amount: String
+    let amount: Int
+    let unit: String
 }
 
 struct ActivityCard: View {
@@ -45,7 +46,7 @@ struct ActivityCard: View {
                 }
                 
                 
-                Text(activity.amount)
+                Text("\(activity.amount) \(activity.unit)")
                     .font(.system(size: 24))
             }
             .padding()
@@ -55,5 +56,5 @@ struct ActivityCard: View {
 }
 
 #Preview {
-    ActivityCard(activity: Activity(id: 0, title: "Daily Steps", subtitle: "Goal: 10,000", image: "figure.walk", amount: "6,545"))
+    ActivityCard(activity: Activity(id: 0, title: "Daily Steps", subtitle: "Goal: 10,000", image: "figure.walk", amount: 6545, unit: "steps"))
 }

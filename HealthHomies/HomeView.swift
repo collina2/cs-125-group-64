@@ -31,7 +31,7 @@ struct HomeView: View {
             .onReceive(manager.$activities) { _ in
                 // This block gets called whenever manager.activities changes
                 // Add any additional logic here to refresh the view
-                print("ON RECEIVE: waterIntake = \(manager.activities["waterIntake"]?.amount ?? "null")")
+
             }
             
             // TODO: Have a message stating what the user is lacking the most

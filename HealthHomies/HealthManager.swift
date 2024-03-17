@@ -33,7 +33,7 @@ class HealthManager: ObservableObject {
         activities["overallScore"] = createActivity(key: "overallScore")
         activities["waterIntake"] = createActivity(key: "waterIntake")
         activities["proteinConsumed"] = createActivity(key: "proteinConsumed")
-        activities["carbsConsumed"] = createActivity(key: "proteinConsumed")
+        activities["carbsConsumed"] = createActivity(key: "carbsConsumed")
         
         Task {
             do {
@@ -61,9 +61,9 @@ class HealthManager: ObservableObject {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate)  { [self] _, result, error in
             let stepCount = self.safeQuantity(result: result, error: error, unit: .count())
-            
+            saveData(Int(stepCount), forKey: "steps")
             DispatchQueue.main.async { [self] in
-                self.activities["steps"] = createActivity(key: "steps", amount: stepCount.formattedString())
+                self.activities["steps"] = createActivity(key: "steps")
             }
             
             print(stepCount.formattedString())
@@ -78,9 +78,9 @@ class HealthManager: ObservableObject {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: calories, quantitySamplePredicate: predicate) { [self] _, result, error in
             let caloriesBurned = self.safeQuantity(result: result, error: error, unit: .kilocalorie())
-            
+            saveData(Int(caloriesBurned), forKey: "caloriesBurned")
             DispatchQueue.main.async { [self] in
-                self.activities["caloriesBurned"] = createActivity(key: "caloriesBurned", amount: caloriesBurned.formattedString())
+                self.activities["caloriesBurned"] = createActivity(key: "caloriesBurned")
             }
             
             print(caloriesBurned.formattedString())
@@ -125,27 +125,57 @@ class HealthManager: ObservableObject {
         return idCounter
     }
     
-    func createActivity(key: String, amount: String = "") -> Activity {
+    func createActivity(key: String) -> Activity {
+        let selectedFocusGoal = loadString(forKey: "selectedGoal") ?? "Overall"
+        let amount = loadInt(forKey: key)
+        var goal = 100
+        var unit = "%"
+        var image = "face.smiling"
+        var title = "Overall Score"
         switch key {
-        case "overallScore":
-            let overallScore = loadInt(forKey: "overallScore")
-            return Activity(id: getID(), title: "Overall Score", subtitle: "Goal: 100%", image: "face.smiling", amount: "\(overallScore)%")
         case "waterIntake":
-            let waterIntake = loadInt(forKey: "waterIntake")
-            return Activity(id: getID(), title: "Water", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
+            goal = 8
+            if selectedFocusGoal == "Hydration" {
+                goal = 10
+            }
+            title = "Water"
+            unit = "cups"
+            image = "waterbottle"
         case "proteinConsumed":
-            let proteinConsumed = loadInt(forKey: "proteinConsumed")
-            return Activity(id: getID(), title: "Protein", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "\(proteinConsumed) grams")
+            goal = 60
+            if selectedFocusGoal == "Strength" {
+                goal = 80
+            }
+            title = "Protein"
+            unit = "grams"
+            image = "fork.knife.circle"
         case "carbsConsumed":
-            let carbsConsumed = loadInt(forKey: "carbsConsumed")
-            return Activity(id: getID(), title: "Carbohydrates", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "\(carbsConsumed) grams")
+            goal = 200
+            if selectedFocusGoal == "Diet" {
+                goal = 100
+            }
+            title = "Carbohydrates"
+            unit = "grams"
+            image = "fork.knife.circle"
         case "caloriesBurned":
-            return Activity(id: getID(), title: "Calories Burned", subtitle: "Goal: 900", image: "flame", amount: amount)
+            goal = 900
+            if selectedFocusGoal == "Cardio" {
+                goal = 1200
+            }
+            title = "Calories Burned"
+            unit = "calories"
+            image = "flame"
         case "steps":
-            return Activity(id: getID(), title: "Steps Taken", subtitle: "Goal: 10,000", image: "figure.walk", amount: amount)
+            goal = 10000
+            if selectedFocusGoal == "Cardio" {
+                goal = 15000
+            }
+            title = "Steps Taken"
+            unit = "steps"
+            image = "figure.walk"
         default: break
         }
-        return Activity(id: getID(), title: "Unknown Activity", subtitle: "Goal: ???", image: "camera.metering.unknown", amount: "null")
+        return Activity(id: getID(), title: title, subtitle: "Goal: \(goal) \(unit)", image: image, amount: amount, unit: unit)
     }
 }
 
