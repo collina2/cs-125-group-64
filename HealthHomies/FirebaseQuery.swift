@@ -24,7 +24,7 @@ struct Food: Hashable {
     let fat: Int
     let protein: Int
     let sugar: Int
-    let servingSize: String
+    let servingSize: ServingSize
     
     // Implementing hash(into:) method
     func hash(into hasher: inout Hasher) {
@@ -35,6 +35,37 @@ struct Food: Hashable {
     static func == (lhs: Food, rhs: Food) -> Bool {
         return lhs.id == rhs.id
     }
+}
+
+struct ServingSize {
+    let amount: Int
+    let unit: String
+}
+
+func extractServingSize(from string: String) -> ServingSize {
+    // Define the regular expression pattern
+    let pattern = #"(\d+)(ml|g|oz)"#
+    
+    // Create a regular expression object
+    guard let regex = try? NSRegularExpression(pattern: pattern) else {
+        return ServingSize(amount: 0, unit: "g")
+    }
+    
+    // Find matches in the input string
+    guard let match = regex.firstMatch(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count)) else {
+        return ServingSize(amount: 0, unit: "g")
+    }
+    
+    // Extract the number and unit from the matched range
+    let numberRange = Range(match.range(at: 1), in: string)!
+    let unitRange = Range(match.range(at: 2), in: string)!
+    
+    // Convert the extracted substrings to Int and String respectively
+    let amount = Int(string[numberRange])
+    let unit = String(string[unitRange])
+    
+    // Return the ServingSize struct
+    return ServingSize(amount: amount ?? 0, unit: unit)
 }
 
 class FirestoreManager: ObservableObject {
@@ -84,6 +115,6 @@ class FirestoreManager: ObservableObject {
     }
     
     func createFood(data: [String: Any]) -> Food {
-        return Food(id: roundedInt(data["id"] ?? 0), name: toString(data["name"] ?? "null"), calories: roundedInt(data["calories"] ?? 0), carbs: roundedInt(data["carbs"] ?? 0), fat: roundedInt(data["fat"] ?? 0), protein: roundedInt(data["protein"] ?? 0), sugar: roundedInt(data["sugar"] ?? 0), servingSize: toString(data["serving_size"] ?? "null"))
+        return Food(id: roundedInt(data["id"] ?? 0), name: toString(data["name"] ?? "null"), calories: roundedInt(data["calories"] ?? 0), carbs: roundedInt(data["carbs"] ?? 0), fat: roundedInt(data["fat"] ?? 0), protein: roundedInt(data["protein"] ?? 0), sugar: roundedInt(data["sugar"] ?? 0), servingSize: extractServingSize(from: toString(data["serving_size"] ?? "null")))
     }
 }

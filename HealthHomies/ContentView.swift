@@ -28,7 +28,7 @@ struct ContentView: View {
                     .foregroundStyle(.tint)
                 
                 VStack {
-                    Text("User Data:")
+                    Text("User Data")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.title)
                         .bold()
