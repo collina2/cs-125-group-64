@@ -19,6 +19,7 @@ struct LogView: View {
     @StateObject var dbManager = FirestoreManager()
     
     @State private var servingSizes: [ServingSize] = []
+    let servingProportions = ["Quarter", "Half", "Full"]
     
     var body: some View {
         
@@ -75,6 +76,20 @@ struct LogView: View {
                         .task {
                             selectedFoodItem = dbManager.fetchedFoods[0].name
                         }
+                        .onChange(of: selectedFoodItem) {
+                            // Find the selected food item
+                            if let selectedFood = dbManager.fetchedFoods.first(where: { $0.name == selectedFoodItem }) {
+                                // Update the serving sizes based on the selected food item
+                                servingSizes = [
+                                    ServingSize(amount: selectedFood.servingSize.amount / 4, unit: selectedFood.servingSize.unit),
+                                    ServingSize(amount: selectedFood.servingSize.amount / 2, unit: selectedFood.servingSize.unit),
+                                    selectedFood.servingSize
+                                ]
+                                // Update the selected serving size to the default (full serving size)
+                                selectedServingSize = servingSizes[2]
+
+                            }
+                        }
                     }
                     
                     Divider() // Add a divider for separation
@@ -83,16 +98,12 @@ struct LogView: View {
                     Text("Serving Size")
                     if !servingSizes.isEmpty {
                         Picker("Serving Size", selection: $selectedServingSize) {
-                            ForEach(servingSizes, id: \.amount) { size in
-                                Text(size.toString())
-                                    .tag(size.amount)
+                            ForEach(Array(servingSizes.enumerated()), id: \.1) { index, size in
+                                Text("\(servingProportions[index]) (\(size.toString()))")
+                                    .tag(size)
                             }
                         }
-                        .task {
-                            selectedServingSize = ServingSize(amount: 1, unit: "g")
-                            servingSizes.append(ServingSize(amount: 2, unit: "g"))
-                            servingSizes.append(ServingSize(amount: 4, unit: "g"))
-                        }
+
                         .pickerStyle(MenuPickerStyle())
                         .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                     }
