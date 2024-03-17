@@ -25,7 +25,7 @@ struct LogView: View {
         
         VStack(alignment: .leading, spacing: 20) {
             Text("Update water intake")
-                .font(.subheadline)
+                .bold()
             
             HStack(spacing: 20) {
                 Button(action: {
@@ -64,15 +64,18 @@ struct LogView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Food Item")
+                        .bold()
                     if !dbManager.fetchedFoods.isEmpty {
                         Picker("Food Item", selection: $selectedFoodItem) {
                             ForEach(dbManager.fetchedFoods, id: \.id) { food in
                                 Text(food.name)
                                     .tag(food.name)
+                                    .frame(alignment: .leading)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, maxHeight: 48, alignment: .leading) // Ensure the picker fills the width
                         .task {
                             selectedFoodItem = dbManager.fetchedFoods[0].name
                         }
@@ -96,14 +99,16 @@ struct LogView: View {
                     
                     // TODO: change serving size to match each food item
                     Text("Serving Size")
+                        .bold()
                     if !servingSizes.isEmpty {
                         Picker("Serving Size", selection: $selectedServingSize) {
                             ForEach(Array(servingSizes.enumerated()), id: \.1) { index, size in
                                 Text("\(servingProportions[index]) (\(size.toString()))")
                                     .tag(size)
+                                    .frame(alignment: .leading)
                             }
                         }
-
+                        
                         .pickerStyle(MenuPickerStyle())
                         .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                     }
