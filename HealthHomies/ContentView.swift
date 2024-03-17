@@ -49,12 +49,11 @@ struct ContentView: View {
             }
             
             // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
-            if !dbManager.fetchedData.isEmpty {
-                ForEach(dbManager.fetchedData.indices, id: \.self) { index in
-                    let item = dbManager.fetchedData[index]
-                    // Access the "name" key of each dictionary
-                    Text(item["name"] as? String ?? "Unknown")
-                }
+            ForEach(dbManager.fetchedData.indices, id: \.self) { index in
+                let item = dbManager.fetchedData[index]
+                // Access the "name" key of each dictionary
+                Text(item["name"] as? String ?? "Unknown")
+                
             }
             
             Divider()

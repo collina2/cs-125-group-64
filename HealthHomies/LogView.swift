@@ -12,12 +12,12 @@ import Foundation
 
 struct LogView: View {
     @State private var waterIntake = 0
-    @State private var selectedFoodItem = "Chicken"
+    @State private var selectedFoodItem: String = ""
     @State private var selectedServingSize = 0.5
     @State private var foodSelections = [String: Double]()
     @EnvironmentObject var manager: HealthManager
+    @StateObject var dbManager = FirestoreManager()
     
-    let foodOptions = ["Chicken", "Orange", "Bread"]
     let servingSizes = [0.5, 1, 2] // Example serving sizes
     
     var body: some View {
@@ -63,13 +63,19 @@ struct LogView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Food Item")
-                    Picker("Food Item", selection: $selectedFoodItem) {
-                        ForEach(foodOptions, id: \.self) { option in
-                            Text(option)
+                    if !dbManager.fetchedFoods.isEmpty {
+                        Picker("Food Item", selection: $selectedFoodItem) {
+                            ForEach(dbManager.fetchedFoods, id: \.id) { food in
+                                Text(food.name)
+                                    .tag(food.name)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
+                        .task {
+                            selectedFoodItem = dbManager.fetchedFoods[0].name
                         }
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    .frame(maxWidth: .infinity, alignment: .leading) // Ensure the picker fills the width
                     
                     Divider() // Add a divider for separation
                     
@@ -85,8 +91,12 @@ struct LogView: View {
                 .padding() // Add padding to the VStack
                 
                 Button(action: {
-                    foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
-                    saveEncodedData(foodSelections, forKey: "foodSelections")
+                    if selectedFoodItem != "" {
+                        foodSelections[selectedFoodItem] = selectedServingSize + (foodSelections[selectedFoodItem] ?? 0)
+                        saveEncodedData(foodSelections, forKey: "foodSelections")
+                        
+                    }
+                    
                 }) {
                     Text("Log Food")
                         .font(.headline)
@@ -113,7 +123,13 @@ struct LogView: View {
             if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
                 foodSelections = loadedData
             }
-            waterIntake = loadInt(forKey: "waterIntake") 
+            waterIntake = loadInt(forKey: "waterIntake")
+            
+            Task {
+                await dbManager.fetchFoods()
+            }
+            
+            
             
         }
 
