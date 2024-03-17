@@ -79,6 +79,7 @@ struct LogView: View {
                     
                     Divider() // Add a divider for separation
                     
+                    // TODO: change serving size to match each food item
                     Text("Serving Size")
                     Picker("Serving Size", selection: $selectedServingSize) {
                         ForEach(servingSizes, id: \.self) { size in

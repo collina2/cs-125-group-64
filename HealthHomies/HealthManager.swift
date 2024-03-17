@@ -30,6 +30,7 @@ class HealthManager: ObservableObject {
         
         let healthTypes: Set = [steps, calories, height, weight]
         
+        // TODO: make this useful
         activities["overallScore"] = createActivity(key: "overallScore")
         activities["waterIntake"] = createActivity(key: "waterIntake")
         activities["proteinConsumed"] = createActivity(key: "proteinConsumed")

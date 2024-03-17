@@ -66,6 +66,8 @@ struct ContentView: View {
             
             Divider()
             
+            // TODO: change to muscle group selector
+            
             Button("See List of Tricep Exercises") {
                 //The next few lines just waits fort the function to be called, and then the data is printed to the console
                 Task {
