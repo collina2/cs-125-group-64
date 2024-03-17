@@ -10,7 +10,7 @@ import SwiftUI
 struct Activity {
     let id: Int
     let title: String
-    let subtitle: String
+    let goal: Int
     let image: String
     let amount: Int
     let unit: String
@@ -23,7 +23,7 @@ struct ActivityCard: View {
         ZStack {
             Color(uiColor: .systemGray6)
                 .cornerRadius(15)
-                .frame(height: 140) // Set fixed height here
+                .frame(height: 120) // Set fixed height here
             
             VStack(spacing: 20) {
                 HStack(alignment: .top) {
@@ -33,7 +33,7 @@ struct ActivityCard: View {
                             .minimumScaleFactor(0.5)
 
                         
-                        Text(activity.subtitle)
+                        Text("Goal: \(activity.goal) \(activity.unit)")
                             .font(.system(size: 12))
                             .foregroundColor(.gray)
                     }
@@ -56,5 +56,5 @@ struct ActivityCard: View {
 }
 
 #Preview {
-    ActivityCard(activity: Activity(id: 0, title: "Daily Steps", subtitle: "Goal: 10,000", image: "figure.walk", amount: 6545, unit: "steps"))
+    ActivityCard(activity: Activity(id: 0, title: "Daily Steps", goal: 10000, image: "figure.walk", amount: 6545, unit: "steps"))
 }

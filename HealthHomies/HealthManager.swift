@@ -175,7 +175,24 @@ class HealthManager: ObservableObject {
             image = "figure.walk"
         default: break
         }
-        return Activity(id: getID(), title: title, subtitle: "Goal: \(goal) \(unit)", image: image, amount: amount, unit: unit)
+        return Activity(id: getID(), title: title, goal: goal, image: image, amount: amount, unit: unit)
+    }
+    
+    func getRecommendationString(title: String) -> String {
+        switch title {
+        case "Water":
+            return "Drink more water"
+        case "Steps Taken":
+            return "Do some cardio (running, cycling, etc.)"
+        case "Calories Burned":
+            return "Burn some calories (weight-lifting, running, etc.)"
+        case "Carbohydrates":
+            return "Eat some carbs (bread, rice, etc.)"
+        case "Protein":
+            return "Eat some protein (chicken, cashews, etc.)"
+        default:
+            return "Exercise More"
+        }
     }
 }
 

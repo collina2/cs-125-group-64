@@ -34,16 +34,27 @@ struct HomeView: View {
 
             }
             
-            // TODO: Have a message stating what the user is lacking the most
-            // i.e. find the max percentage difference of user stat and their goal,
-            // and print a message relating to that
-            // e.g. if their worst stat is water intake, then print this:
-            Text("Looks like you need to drink more water!")
-                .font(.title)
-                .padding()
+            // Recommendation System
+            VStack(alignment: .leading) {
+                List {
+                    Section(header: Text("Recommendations")) { // Title for the list
+                        ForEach(manager.activities.values.sorted(by: { Double($0.amount) / Double($0.goal) < Double($1.amount) / Double($1.goal) }).prefix(7), id: \.id) { activity in
+                            if activity.title != "Overall Score" && activity.amount < activity.goal {
+                                Text(manager.getRecommendationString(title: activity.title))
+                            }
+                        }
+                    }
+                }
+            }
+            .padding()
+                
+            
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .onAppear {
+            
+        }
         
         
         .analyticsScreen(name: "\(HomeView.self)", extraParameters: ["test1": "test1 value"])
