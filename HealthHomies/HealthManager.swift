@@ -30,18 +30,10 @@ class HealthManager: ObservableObject {
         
         let healthTypes: Set = [steps, calories, height, weight]
         
-        let overallScore = loadInt(forKey: "overallScore")
-        activities["overallScore"] = Activity(id: getID(), title: "Overall Score", subtitle: "Goal: 100%", image: "face.smiling", amount: "\(overallScore)%")
-        
-        let waterIntake = loadInt(forKey: "waterIntake")
-        activities["waterIntake"] = Activity(id: getID(), title: "Water", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
-        
-        let proteinConsumed = loadInt(forKey: "proteinConsumed")
-        activities["proteinConsumed"] = Activity(id: getID(), title: "Protein", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "\(proteinConsumed) grams")
-        
-        let carbsConsumed = loadInt(forKey: "carbsConsumed")
-        activities["carbsConsumed"] = Activity(id: getID(), title: "Carbohydrates", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "\(carbsConsumed) grams")
-        
+        activities["overallScore"] = createActivity(key: "overallScore")
+        activities["waterIntake"] = createActivity(key: "waterIntake")
+        activities["proteinConsumed"] = createActivity(key: "proteinConsumed")
+        activities["carbsConsumed"] = createActivity(key: "proteinConsumed")
         
         Task {
             do {
@@ -69,10 +61,9 @@ class HealthManager: ObservableObject {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate)  { [self] _, result, error in
             let stepCount = self.safeQuantity(result: result, error: error, unit: .count())
-            let activity = Activity(id: getID(), title: "Steps Taken", subtitle: "Goal: 10,000", image: "figure.walk", amount: stepCount.formattedString())
             
-            DispatchQueue.main.async {
-                self.activities["steps"] = activity
+            DispatchQueue.main.async { [self] in
+                self.activities["steps"] = createActivity(key: "steps", amount: stepCount.formattedString())
             }
             
             print(stepCount.formattedString())
@@ -87,10 +78,9 @@ class HealthManager: ObservableObject {
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
         let query = HKStatisticsQuery(quantityType: calories, quantitySamplePredicate: predicate) { [self] _, result, error in
             let caloriesBurned = self.safeQuantity(result: result, error: error, unit: .kilocalorie())
-            let activity = Activity(id: getID(), title: "Calories Burned", subtitle: "Goal: 900", image: "flame", amount: caloriesBurned.formattedString())
             
-            DispatchQueue.main.async {
-                self.activities["caloriesBurned"] = activity
+            DispatchQueue.main.async { [self] in
+                self.activities["caloriesBurned"] = createActivity(key: "caloriesBurned", amount: caloriesBurned.formattedString())
             }
             
             print(caloriesBurned.formattedString())
@@ -135,6 +125,28 @@ class HealthManager: ObservableObject {
         return idCounter
     }
     
+    func createActivity(key: String, amount: String = "") -> Activity {
+        switch key {
+        case "overallScore":
+            let overallScore = loadInt(forKey: "overallScore")
+            return Activity(id: getID(), title: "Overall Score", subtitle: "Goal: 100%", image: "face.smiling", amount: "\(overallScore)%")
+        case "waterIntake":
+            let waterIntake = loadInt(forKey: "waterIntake")
+            return Activity(id: getID(), title: "Water", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
+        case "proteinConsumed":
+            let proteinConsumed = loadInt(forKey: "proteinConsumed")
+            return Activity(id: getID(), title: "Protein", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "\(proteinConsumed) grams")
+        case "carbsConsumed":
+            let carbsConsumed = loadInt(forKey: "carbsConsumed")
+            return Activity(id: getID(), title: "Carbohydrates", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "\(carbsConsumed) grams")
+        case "caloriesBurned":
+            return Activity(id: getID(), title: "Calories Burned", subtitle: "Goal: 900", image: "flame", amount: amount)
+        case "steps":
+            return Activity(id: getID(), title: "Steps Taken", subtitle: "Goal: 10,000", image: "figure.walk", amount: amount)
+        default: break
+        }
+        return Activity(id: getID(), title: "Unknown Activity", subtitle: "Goal: ???", image: "camera.metering.unknown", amount: "null")
+    }
 }
 
 extension Double {

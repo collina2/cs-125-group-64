@@ -12,7 +12,7 @@ struct Activity {
     let title: String
     let subtitle: String
     let image: String
-    @State var amount: String
+    let amount: String
 }
 
 struct ActivityCard: View {

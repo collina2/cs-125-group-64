@@ -29,8 +29,8 @@ struct LogView: View {
             HStack(spacing: 20) {
                 Button(action: {
                     waterIntake -= 1
-                    manager.activities["waterIntake"] = Activity(id: manager.getID(), title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
                     saveData(waterIntake, forKey: "waterIntake")
+                    manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
                     
                 }) {
                     Image(systemName: "minus")
@@ -46,8 +46,8 @@ struct LogView: View {
                 
                 Button(action: {
                     waterIntake += 1
-                    manager.activities["waterIntake"]?.amount = "\(waterIntake) cups"
                     saveData(waterIntake, forKey: "waterIntake")
+                    manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
                 }) {
                     Image(systemName: "plus")
                         .font(.title)
