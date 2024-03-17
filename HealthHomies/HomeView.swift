@@ -22,12 +22,17 @@ struct HomeView: View {
                 .padding()
             LazyVGrid(columns: Array(repeating: GridItem(spacing: 20), count: 2), spacing: 20) {
                 // TODO: have the goals change depending on their exercise, height, weight, etc.
-                ForEach(manager.activities.sorted(by: { $0.value.id < $1.value.id }), id: \.key) { item in
-                    ActivityCard(activity: item.value)
+                ForEach(manager.activities.values.sorted(by: { $0.id > $1.id }), id: \.id) { activity in
+                    ActivityCard(activity: activity)
                 }
                 
             }
             .padding(.horizontal)
+            .onReceive(manager.$activities) { _ in
+                // This block gets called whenever manager.activities changes
+                // Add any additional logic here to refresh the view
+                print("ON RECEIVE: waterIntake = \(manager.activities["waterIntake"]?.amount ?? "null")")
+            }
             
             // TODO: Have a message stating what the user is lacking the most
             // i.e. find the max percentage difference of user stat and their goal,

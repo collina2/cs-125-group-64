@@ -15,6 +15,7 @@ struct LogView: View {
     @State private var selectedFoodItem = "Chicken"
     @State private var selectedServingSize = 0.5
     @State private var foodSelections = [String: Double]()
+    @EnvironmentObject var manager: HealthManager
     
     let foodOptions = ["Chicken", "Orange", "Bread"]
     let servingSizes = [0.5, 1, 2] // Example serving sizes
@@ -28,7 +29,9 @@ struct LogView: View {
             HStack(spacing: 20) {
                 Button(action: {
                     waterIntake -= 1
+                    manager.activities["waterIntake"] = Activity(id: manager.getID(), title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
                     saveData(waterIntake, forKey: "waterIntake")
+                    
                 }) {
                     Image(systemName: "minus")
                         .font(.title)
@@ -43,6 +46,7 @@ struct LogView: View {
                 
                 Button(action: {
                     waterIntake += 1
+                    manager.activities["waterIntake"]?.amount = "\(waterIntake) cups"
                     saveData(waterIntake, forKey: "waterIntake")
                 }) {
                     Image(systemName: "plus")

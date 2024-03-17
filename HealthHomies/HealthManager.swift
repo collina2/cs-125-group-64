@@ -20,6 +20,7 @@ class HealthManager: ObservableObject {
     
     @Published var activities: [String : Activity] = [:]
     @Published var userData: [String : HKQuantity] = [:]
+    @Published var idCounter: Int = 0
     
     init() {
         let steps = HKQuantityType(.stepCount)
@@ -29,17 +30,17 @@ class HealthManager: ObservableObject {
         
         let healthTypes: Set = [steps, calories, height, weight]
         
+        let overallScore = loadInt(forKey: "overallScore")
+        activities["overallScore"] = Activity(id: getID(), title: "Overall Score", subtitle: "Goal: 100%", image: "face.smiling", amount: "\(overallScore)%")
+        
         let waterIntake = loadInt(forKey: "waterIntake")
-        activities["waterIntake"] = Activity(id: 2, title: "Water Intake", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
+        activities["waterIntake"] = Activity(id: getID(), title: "Water", subtitle: "Goal: 8 cups", image: "waterbottle", amount: "\(waterIntake) cups")
         
         let proteinConsumed = loadInt(forKey: "proteinConsumed")
-        activities["proteinConsumed"] = Activity(id: 3, title: "Protein Consumed", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "\(proteinConsumed) grams")
+        activities["proteinConsumed"] = Activity(id: getID(), title: "Protein", subtitle: "Goal: 60 grams", image: "fork.knife.circle", amount: "\(proteinConsumed) grams")
         
         let carbsConsumed = loadInt(forKey: "carbsConsumed")
-        activities["carbsConsumed"] = Activity(id: 4, title: "Carbs Consumed", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "\(carbsConsumed) grams")
-        
-        let overallScore = loadInt(forKey: "overallScore")
-        activities["overallScore"] = Activity(id: 5, title: "Overall Score", subtitle: "Goal: 100%", image: "face.smiling", amount: "\(overallScore)%")
+        activities["carbsConsumed"] = Activity(id: getID(), title: "Carbohydrates", subtitle: "Goal: 200 grams", image: "fork.knife.circle", amount: "\(carbsConsumed) grams")
         
         
         Task {
@@ -66,9 +67,9 @@ class HealthManager: ObservableObject {
     func fetchTodaySteps() {
         let steps = HKQuantityType(.stepCount)
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
-        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate)  { _, result, error in
+        let query = HKStatisticsQuery(quantityType: steps, quantitySamplePredicate: predicate)  { [self] _, result, error in
             let stepCount = self.safeQuantity(result: result, error: error, unit: .count())
-            let activity = Activity(id: 0, title: "Steps Taken", subtitle: "Goal: 10,000", image: "figure.walk", amount: stepCount.formattedString())
+            let activity = Activity(id: getID(), title: "Steps Taken", subtitle: "Goal: 10,000", image: "figure.walk", amount: stepCount.formattedString())
             
             DispatchQueue.main.async {
                 self.activities["steps"] = activity
@@ -84,9 +85,9 @@ class HealthManager: ObservableObject {
     func fetchTodayCalories() {
         let calories = HKQuantityType(.activeEnergyBurned)
         let predicate = HKQuery.predicateForSamples(withStart: .startOfDay, end: Date())
-        let query = HKStatisticsQuery(quantityType: calories, quantitySamplePredicate: predicate) { _, result, error in
+        let query = HKStatisticsQuery(quantityType: calories, quantitySamplePredicate: predicate) { [self] _, result, error in
             let caloriesBurned = self.safeQuantity(result: result, error: error, unit: .kilocalorie())
-            let activity = Activity(id: 1, title: "Calories Burned", subtitle: "Goal: 900", image: "flame", amount: caloriesBurned.formattedString())
+            let activity = Activity(id: getID(), title: "Calories Burned", subtitle: "Goal: 900", image: "flame", amount: caloriesBurned.formattedString())
             
             DispatchQueue.main.async {
                 self.activities["caloriesBurned"] = activity
@@ -126,6 +127,12 @@ class HealthManager: ObservableObject {
 
         healthStore.execute(queryWeight)
         healthStore.execute(queryHeight)
+    }
+    
+    // Function to increment idCounter and return its current value
+    func getID() -> Int {
+        idCounter += 1
+        return idCounter
     }
     
 }

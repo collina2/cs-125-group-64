@@ -14,8 +14,8 @@ import FirebaseFirestore
 
 struct ContentView: View {
     @EnvironmentObject var manager: HealthManager
-    @State private var selectedGoal = "Strength"
-    let goalOptions = ["Strength", "Diet", "Hydration"]
+    @State private var selectedGoal = "Overall"
+    let goalOptions = ["Overall", "Diet", "Hydration", "Strength"]
     
     // This is imported so the funcitions inside the class can be used
     @StateObject var dbManager = FirestoreManager()

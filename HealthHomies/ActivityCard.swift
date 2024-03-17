@@ -22,23 +22,28 @@ struct ActivityCard: View {
         ZStack {
             Color(uiColor: .systemGray6)
                 .cornerRadius(15)
+                .frame(height: 140) // Set fixed height here
             
             VStack(spacing: 20) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 5) {
                         Text(activity.title)
-                            .font(.system(size: 16))
+                            .frame(height: 20)
+                            .minimumScaleFactor(0.5)
+
                         
                         Text(activity.subtitle)
                             .font(.system(size: 12))
                             .foregroundColor(.gray)
                     }
                     
+                    
                     Spacer()
                     
                     Image(systemName: activity.image)
                         .foregroundColor(.green)
                 }
+                
                 
                 Text(activity.amount)
                     .font(.system(size: 24))
