@@ -58,6 +58,7 @@ struct ContentView: View {
                         manager.activities["waterIntake"] = manager.createActivity(key: "waterIntake")
                         manager.activities["steps"] = manager.createActivity(key: "steps")
                         manager.activities["caloriesBurned"] = manager.createActivity(key: "caloriesBurned")
+                        manager.updateOverallScore()
 
                     }
                 
@@ -66,28 +67,28 @@ struct ContentView: View {
             
             Divider()
             
-            // TODO: change to muscle group selector
+            // TODO: change to either all daily stats or previous daily stats
             
-            Button("See List of Tricep Exercises") {
-                //The next few lines just waits fort the function to be called, and then the data is printed to the console
-                Task {
-                    await dbManager.fetchFirebaseData()
-                }
-            }
-            
-            List {
-                // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
-                Section(header: Text("Exercises")) {
-                    ForEach(dbManager.fetchedData.indices, id: \.self) { index in
-                        let item = dbManager.fetchedData[index]
-                        // Access the "name" key of each dictionary
-                        Text(item["name"] as? String ?? "Unknown")
-                        
-                    }
-                }
-            }
-            
-            Divider()
+//            Button("See List of Tricep Exercises") {
+//                //The next few lines just waits fort the function to be called, and then the data is printed to the console
+//                Task {
+//                    await dbManager.fetchFirebaseData()
+//                }
+//            }
+//            
+//            List {
+//                // Here it checks the fetchedData array from the FirebaseQuery file and prints that out if it's not empty
+//                Section(header: Text("Exercises")) {
+//                    ForEach(dbManager.fetchedData.indices, id: \.self) { index in
+//                        let item = dbManager.fetchedData[index]
+//                        // Access the "name" key of each dictionary
+//                        Text(item["name"] as? String ?? "Unknown")
+//                        
+//                    }
+//                }
+//            }
+//            
+//            Divider()
             
         }
         .padding()

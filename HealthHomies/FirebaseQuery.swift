@@ -16,7 +16,7 @@ let db = Firestore.firestore()
 let exerciseRef = db.collection("Exercise")
 let foodsRef = db.collection("Foods")
 
-struct Food: Hashable {
+struct Food: Hashable, Encodable, Decodable {
     let id: Int
     let name: String
     let calories: Int
@@ -35,11 +35,44 @@ struct Food: Hashable {
     static func == (lhs: Food, rhs: Food) -> Bool {
         return lhs.id == rhs.id
     }
+    
+    // Implementing == method to compare two Food structs
+    static func < (lhs: Food, rhs: Food) -> Bool {
+        return lhs.name < rhs.name
+    }
 }
 
-struct ServingSize {
+struct Exercise: Hashable {
+    let id: Int
+    let name: String
+    let muscleGroups: [String]
+    let repetitions: Int
+    let sets: Int
+    
+    // Implementing hash(into:) method
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    // Implementing == method to compare two Exercise structs
+    static func == (lhs: Exercise, rhs: Exercise) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
+struct ServingSize: Hashable, Encodable, Decodable {
     let amount: Int
     let unit: String
+    
+    // Implementing hash(into:) method
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(amount)
+    }
+
+    // Implementing == method to compare two ServingSize structs
+    static func == (lhs: ServingSize, rhs: ServingSize) -> Bool {
+        return (lhs.amount == rhs.amount) && (lhs.unit == rhs.unit)
+    }
 }
 
 func extractServingSize(from string: String) -> ServingSize {
@@ -71,6 +104,8 @@ func extractServingSize(from string: String) -> ServingSize {
 class FirestoreManager: ObservableObject {
     @Published var fetchedData: [[String : Any]] = []
     @Published var fetchedFoods: [Food] = []
+    @Published var fetchedExercises: [Exercise] = []
+    @Published var fetchedMuscleGroups: Set<String> = []
     
     func fetchFirebaseData() async {
         
@@ -101,7 +136,44 @@ class FirestoreManager: ObservableObject {
             
             fetchedFoods = querySnapshot.documents.compactMap { createFood(data: $0.data()) }
         } catch {
-            print("Error getting documents: \(error)")
+            print("Error getting foods: \(error)")
+        }
+    }
+    
+    func fetchExercises(muscleGroup: String) async {
+        
+        let query = exerciseRef.whereField("muscle_groups", arrayContains: muscleGroup)
+        
+        do {
+            let querySnapshot = try await query.getDocuments()
+            
+            fetchedExercises = querySnapshot.documents.compactMap { createExercise(data: $0.data()) }
+        } catch {
+            print("Error getting exercises: \(error)")
+        }
+    }
+    
+    func fetchMuscleGroups() async {
+        let query = exerciseRef.order(by: "name")
+
+        do {
+            let querySnapshot = try await query.getDocuments()
+
+            // Loop through each document
+            for document in querySnapshot.documents {
+                // Get the data dictionary from the document
+                let muscleGroups = document.get("muscle_groups") as? [String] ?? []
+                
+                print("actest muscleGroups => \(muscleGroups)")
+                
+                fetchedMuscleGroups.formUnion(muscleGroups)
+                
+            }
+
+            // Now 'allMuscleGroups' contains all unique muscle groups
+            print("All muscle groups: \(fetchedMuscleGroups)")
+        } catch {
+            print("Error getting exercises: \(error)")
         }
     }
     
@@ -116,5 +188,9 @@ class FirestoreManager: ObservableObject {
     
     func createFood(data: [String: Any]) -> Food {
         return Food(id: roundedInt(data["id"] ?? 0), name: toString(data["name"] ?? "null"), calories: roundedInt(data["calories"] ?? 0), carbs: roundedInt(data["carbs"] ?? 0), fat: roundedInt(data["fat"] ?? 0), protein: roundedInt(data["protein"] ?? 0), sugar: roundedInt(data["sugar"] ?? 0), servingSize: extractServingSize(from: toString(data["serving_size"] ?? "null")))
+    }
+    
+    func createExercise(data: [String: Any]) -> Exercise {
+        return Exercise(id: roundedInt(data["id"] ?? 0), name: toString(data["name"] ?? "null"), muscleGroups: data["muscle_groups"] as? [String] ?? [], repetitions: roundedInt(data["repetitions"] ?? 0), sets: roundedInt(data["sets"] ?? 0))
     }
 }

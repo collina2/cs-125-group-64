@@ -21,7 +21,7 @@ class HealthManager: ObservableObject {
     @Published var activities: [String : Activity] = [:]
     @Published var userData: [String : HKQuantity] = [:]
     @Published var idCounter: Int = 0
-    
+        
     init() {
         let steps = HKQuantityType(.stepCount)
         let calories = HKQuantityType(.activeEnergyBurned)
@@ -30,8 +30,6 @@ class HealthManager: ObservableObject {
         
         let healthTypes: Set = [steps, calories, height, weight]
         
-        // TODO: make this useful
-        activities["overallScore"] = createActivity(key: "overallScore")
         activities["waterIntake"] = createActivity(key: "waterIntake")
         activities["proteinConsumed"] = createActivity(key: "proteinConsumed")
         activities["carbsConsumed"] = createActivity(key: "carbsConsumed")
@@ -42,6 +40,7 @@ class HealthManager: ObservableObject {
                 fetchTodaySteps()
                 fetchTodayCalories()
                 readMostRecentSample()
+                updateOverallScore()
             } catch {
                 print("error fetching health data")
             }
@@ -65,6 +64,7 @@ class HealthManager: ObservableObject {
             saveData(Int(stepCount), forKey: "steps")
             DispatchQueue.main.async { [self] in
                 self.activities["steps"] = createActivity(key: "steps")
+                updateOverallScore()
             }
             
             print(stepCount.formattedString())
@@ -82,6 +82,7 @@ class HealthManager: ObservableObject {
             saveData(Int(caloriesBurned), forKey: "caloriesBurned")
             DispatchQueue.main.async { [self] in
                 self.activities["caloriesBurned"] = createActivity(key: "caloriesBurned")
+                updateOverallScore()
             }
             
             print(caloriesBurned.formattedString())
@@ -127,17 +128,17 @@ class HealthManager: ObservableObject {
     }
     
     func saveFoodDetails(fetchedFoods: [Food] = []) {
-        var foodSelections: [String: Double] = [:]
-        if let loadedData: [String: Double] = loadDecodedData(forKey: "foodSelections") {
+        var foodSelections: [Food: ServingSize] = [:]
+        if let loadedData: [Food: ServingSize] = loadDecodedData(forKey: "foodSelections") {
             foodSelections = loadedData
         }
         
         var proteinCount: Double = 0.0
         for (foodName, selectionValue) in foodSelections {
             // Find the corresponding Food struct in dbManager.fetchedFoods
-            if let food = fetchedFoods.first(where: { $0.name == foodName }) {
+            if let food = fetchedFoods.first(where: { $0.name == foodName.name }) {
                 // Calculate the amount to add
-                let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.protein)
+                let amountFromSelection = Double(selectionValue.amount) / Double(food.servingSize.amount) * Double(food.protein)
                 proteinCount += amountFromSelection
             }
         }
@@ -146,18 +147,42 @@ class HealthManager: ObservableObject {
         var carbCount: Double = 0.0
         for (foodName, selectionValue) in foodSelections {
             // Find the corresponding Food struct in dbManager.fetchedFoods
-            if let food = fetchedFoods.first(where: { $0.name == foodName }) {
+            if let food = fetchedFoods.first(where: { $0.name == foodName.name }) {
                 // Calculate the amount to add
-                let amountFromSelection = selectionValue / Double(food.servingSize.amount) * Double(food.carbs)
+                let amountFromSelection = Double(selectionValue.amount) / Double(food.servingSize.amount) * Double(food.carbs)
                 carbCount += amountFromSelection
             }
         }
         saveData(Int(carbCount), forKey: "carbsConsumed")
     }
     
+    func updateOverallScore() {
+        var totalPercentage = 0
+        var activityCount = 0
+
+        for (key, activity) in activities {
+            guard key != "overallScore", activity.goal != 0 else {
+                continue // Skip overallScore and activities with goal = 0 to avoid division by zero
+            }
+            
+            print("actest key: \(key), activity: \(activity)")
+            
+            var percentage = Int((Double(activity.amount) / Double(activity.goal)) * 100)
+            if percentage > 100 {
+                percentage = 100
+            }
+            totalPercentage += percentage
+            activityCount += 1
+        }
+
+        let averagePercentage = activityCount > 0 ? totalPercentage / activityCount : 0
+        saveData(Int(averagePercentage), forKey: "overallScore")
+        activities["overallScore"] = createActivity(key: "overallScore")
+    }
+    
     func createActivity(key: String) -> Activity {
         let selectedFocusGoal = loadString(forKey: "selectedGoal") ?? "Overall"
-        var amount = loadInt(forKey: key)
+        let amount = loadInt(forKey: key)
         
         
         var goal = 100
